@@ -1,0 +1,5 @@
+opencv-contrib-python
+vosk
+sounddevice
+numpy
+praat-parselmouth
