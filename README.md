@@ -55,3 +55,28 @@ venv\Scripts\python -m robo_view.main
 Uses webcam index 0 and the system default microphone by default -- see
 `robo_view/config.py` to change either, along with tracker box size, HUD
 colors, playback length, etc.
+
+## Browser version
+
+A dependency-free browser build lives in `web/`. It keeps all video,
+tracking, replay, and acoustic analysis in the browser and does not require an
+application backend.
+
+From the repository root, serve it locally with:
+
+```powershell
+python -m http.server 8000 --directory web
+```
+
+Then open `http://localhost:8000` and select **Enable Robo View**. Camera and
+microphone APIs require either `localhost` or an HTTPS deployment; opening the
+HTML file directly is not supported consistently by browsers.
+
+The browser build supports the same spoken commands and keyboard fallbacks as
+the Python version. Voice commands use the browser's Speech Recognition API
+when it is available. Depending on the browser, recognition may use an online
+browser service; the on-screen buttons and keyboard controls always remain
+local and available. Target tracking uses a lightweight client-side template
+tracker designed for this demo, while stress mode reports locally calculated
+pitch, jitter, and shimmer estimates. As in the desktop version, the stress
+display is an acoustic effect, not a lie detector.

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020603">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>ROBO VIEW</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">OCP // TARGETING SYSTEM</p>
+        <h1>ROBO VIEW</h1>
+      </div>
+      <div id="hardwareStatus" class="hardware-status">CAMERA OFFLINE</div>
+    </header>
+
+    <section class="viewport" aria-label="Camera targeting display">
+      <video id="camera" playsinline muted></video>
+      <canvas id="display" width="1280" height="720"></canvas>
+      <div id="permissionPanel" class="permission-panel">
+        <p class="panel-code">DIRECTIVE 01</p>
+        <h2>INITIALIZE OPTICAL SYSTEM</h2>
+        <p>Video and acoustic analysis stay on this device. Voice-command processing depends on your browser.</p>
+        <button id="startButton" type="button">ENABLE ROBO VIEW</button>
+        <p id="startupError" class="error" role="alert"></p>
+      </div>
+    </section>
+
+    <section class="console" aria-label="Robo View controls">
+      <div class="readout">
+        <span>MODE</span>
+        <strong id="modeReadout">OFFLINE</strong>
+      </div>
+      <div class="readout transcript">
+        <span>VOICE INPUT</span>
+        <strong id="voiceReadout">—</strong>
+      </div>
+      <div class="commands" role="group" aria-label="Commands">
+        <button type="button" data-command="grid"><kbd>G</kbd> GRID</button>
+        <button type="button" data-command="target"><kbd>T</kbd> TARGET</button>
+        <button type="button" data-command="follow"><kbd>F</kbd> FOLLOW</button>
+        <button type="button" data-command="stress"><kbd>S</kbd> STRESS</button>
+        <button type="button" data-command="playback"><kbd>P</kbd> PLAYBACK</button>
+        <button type="button" data-command="reset"><kbd>R</kbd> RESET</button>
+      </div>
+    </section>
+
+    <p class="hint">Say a command or use the controls. In stress mode, press <kbd>1</kbd> or <kbd>2</kbd> to select a speaker.</p>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
