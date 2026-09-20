@@ -69,6 +69,4 @@ export class PlaybackController {
       if (generation === this.generation) this.loading = false;
     });
   }
-
-  get progress() { return this.frames.length ? this.index / this.frames.length : 0; }
 }

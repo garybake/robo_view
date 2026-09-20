@@ -17,7 +17,14 @@ export class VoiceStressAnalyzer {
   analyze() {
     this.analyser.getFloatTimeDomainData(this.samples);
     const result = analyzeVoice(this.samples, this.context.sampleRate);
-    if (result) this.results[this.activeSpeaker] = result;
+    const previous = this.results[this.activeSpeaker];
+    this.results[this.activeSpeaker] = {
+      f0: result?.f0 ?? previous?.f0 ?? 0,
+      jitter: result?.jitter ?? previous?.jitter ?? 0,
+      shimmer: result?.shimmer ?? previous?.shimmer ?? 0,
+      stress: result?.stress ?? 0,
+      waveform: envelope(this.samples, 64),
+    };
     return this.results;
   }
 
@@ -25,6 +32,24 @@ export class VoiceStressAnalyzer {
     this.source.disconnect();
     this.analyser.disconnect();
   }
+}
+
+/** Peak envelope of the waveform, bucketed for cheap canvas plotting. */
+function envelope(samples, buckets) {
+  const bucketSize = Math.floor(samples.length / buckets);
+  const result = new Array(buckets);
+  for (let bucket = 0; bucket < buckets; bucket += 1) {
+    const start = bucket * bucketSize;
+    let min = 1;
+    let max = -1;
+    for (let i = start; i < start + bucketSize; i += 1) {
+      const value = samples[i];
+      if (value < min) min = value;
+      if (value > max) max = value;
+    }
+    result[bucket] = [min, max];
+  }
+  return result;
 }
 
 export function analyzeVoice(samples, sampleRate) {

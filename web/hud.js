@@ -5,30 +5,12 @@ export const COLORS = {
   red: "#ff5151",
 };
 
-export function drawGrid(ctx, width, height, spacing = 64) {
-  ctx.save();
-  ctx.strokeStyle = COLORS.dim;
-  ctx.lineWidth = 1;
-  for (let x = 0; x < width; x += spacing) line(ctx, x, 0, x, height);
-  for (let y = 0; y < height; y += spacing) line(ctx, 0, y, width, y);
-  ctx.restore();
-}
-
-export function drawCrosshair(ctx, center, size = 40) {
+export function drawGrid(ctx, width, height, center = { x: width / 2, y: height / 2 }) {
   ctx.save();
   ctx.strokeStyle = COLORS.green;
-  ctx.fillStyle = COLORS.green;
   ctx.lineWidth = 2;
-  line(ctx, center.x - size, center.y, center.x - 8, center.y);
-  line(ctx, center.x + 8, center.y, center.x + size, center.y);
-  line(ctx, center.x, center.y - size, center.x, center.y - 8);
-  line(ctx, center.x, center.y + 8, center.x, center.y + size);
-  ctx.beginPath();
-  ctx.arc(center.x, center.y, size, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(center.x, center.y, 3, 0, Math.PI * 2);
-  ctx.fill();
+  line(ctx, 0, center.y, width, center.y);
+  line(ctx, center.x, 0, center.x, height);
   ctx.restore();
 }
 
@@ -68,6 +50,33 @@ export function drawMeter(ctx, { x, y, width, height, value, max = 100, label, c
   ctx.fillRect(x, y, width * fraction, height);
   ctx.font = "14px 'Courier New', monospace";
   if (label) ctx.fillText(label, x, y - 8);
+  ctx.restore();
+}
+
+const WAVEFORM_GAIN = 6;
+
+export function drawWaveform(ctx, { x, y, width, height, waveform, label, color = COLORS.green }) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 1;
+  line(ctx, x, y - height / 2, x, y + height / 2);
+  line(ctx, x + width, y - height / 2, x + width, y + height / 2);
+  line(ctx, x, y, x + width, y);
+  if (waveform?.length) {
+    ctx.lineWidth = 1.5;
+    const step = width / waveform.length;
+    const clamp = (value) => Math.max(-1, Math.min(1, value * WAVEFORM_GAIN));
+    ctx.beginPath();
+    waveform.forEach(([min, max], index) => {
+      const px = x + index * step;
+      ctx.moveTo(px, y - clamp(max) * (height / 2));
+      ctx.lineTo(px, y - clamp(min) * (height / 2));
+    });
+    ctx.stroke();
+  }
+  ctx.font = "14px 'Courier New', monospace";
+  if (label) ctx.fillText(label, x, y - height / 2 - 10);
   ctx.restore();
 }
 
